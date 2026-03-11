@@ -1,4 +1,4 @@
-import { ConversationNode } from '../types/conversation';
+import type { ConversationNode } from '../types/conversation';
 
 export const lessonScript: Record<string, ConversationNode> = {
   // ============ PHASE 1: EXPLORATION ============
