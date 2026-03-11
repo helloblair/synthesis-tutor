@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useCallback, useRef, type ReactNode } from 'react';
-import type { ConversationState, ChatMessage, LessonPhase } from '../types/conversation';
+import type { ConversationState, LessonPhase } from '../types/conversation';
 import { lessonScript, autoAdvanceMap, FIRST_NODE_ID } from '../data/lessonScript';
 
 // --- Actions ---
@@ -142,6 +142,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useConversation() {
   const context = useContext(ConversationContext);
   if (!context) throw new Error('useConversation must be used within ConversationProvider');
