@@ -1,11 +1,13 @@
-import { PALETTE_FRACTIONS, FRACTION_COLORS } from '../context/ManipulativeContext';
+import { PALETTE_FRACTIONS, FRACTION_COLORS, useManipulative } from '../context/ManipulativeContext';
 import { fractionLabel } from '../utils/fractionMath';
 import type { Fraction } from '../utils/fractionMath';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
+const PALETTE_BASE = 200;
+
 function DraggablePaletteBlock({ fraction, baseWidth }: { fraction: Fraction; baseWidth: number }) {
-  const width = (fraction.numerator / fraction.denominator) * baseWidth;
+  const width = Math.max((fraction.numerator / fraction.denominator) * baseWidth, 44);
   const color = FRACTION_COLORS[fraction.denominator] || '#6B7280';
   const id = `palette-${fraction.numerator}-${fraction.denominator}`;
 
@@ -15,7 +17,7 @@ function DraggablePaletteBlock({ fraction, baseWidth }: { fraction: Fraction; ba
   });
 
   const style = {
-    width: `${Math.max(width, 40)}px`,
+    width: `${width}px`,
     backgroundColor: color,
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.5 : 1,
@@ -44,7 +46,7 @@ export function FractionPalette({ baseWidth }: { baseWidth: number }) {
           <DraggablePaletteBlock
             key={`${f.numerator}-${f.denominator}`}
             fraction={f}
-            baseWidth={baseWidth}
+            baseWidth={PALETTE_BASE}
           />
         ))}
       </div>
