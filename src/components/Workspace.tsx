@@ -8,7 +8,6 @@ import type { FractionBlock } from '../context/ManipulativeContext';
 
 function DraggableWorkspaceBlock({
   block,
-  baseWidth,
   isSelected,
   onTap,
   onDoubleTap,
@@ -19,7 +18,7 @@ function DraggableWorkspaceBlock({
   onTap: () => void;
   onDoubleTap: () => void;
 }) {
-  const width = (block.fraction.numerator / block.fraction.denominator) * baseWidth;
+  const height = Math.max((block.fraction.numerator / block.fraction.denominator) * 400, 36);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: block.id,
     data: { fraction: block.fraction, source: 'workspace', blockId: block.id },
@@ -38,7 +37,7 @@ function DraggableWorkspaceBlock({
   };
 
   const style = {
-    width: `${Math.max(width, 40)}px`,
+    height: `${height}px`,
     backgroundColor: block.color,
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.7 : 1,
@@ -53,7 +52,7 @@ function DraggableWorkspaceBlock({
       {...listeners}
       {...attributes}
       onClick={handleClick}
-      className="h-14 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md touch-manipulation select-none cursor-grab active:cursor-grabbing"
+      className="w-16 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md touch-manipulation select-none cursor-grab active:cursor-grabbing"
       style={style}
     >
       {fractionLabel(block.fraction)}
@@ -124,7 +123,7 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
           Tap another same-denominator block to combine · Double-tap to split
         </p>
       )}
-      <div className="flex flex-wrap gap-3 p-8 pt-16 items-end">
+      <div className="flex flex-row flex-wrap gap-3 p-6 pt-14 items-end">
         {state.workspaceBlocks.map((block) => (
           <div key={block.id} className="relative">
             <DraggableWorkspaceBlock
