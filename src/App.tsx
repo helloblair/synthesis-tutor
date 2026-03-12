@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { DndContext, TouchSensor, MouseSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
+import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { ConversationProvider, useConversation } from './context/ConversationContext';
 import { ManipulativeProvider, useManipulative } from './context/ManipulativeContext';
 import { MessageList } from './components/MessageList';
@@ -38,13 +38,13 @@ function TutorPanel() {
 function ManipulativePanel() {
   const { addBlock } = useManipulative();
 
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: { distance: 5 },
+  });
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { distance: 5 },
   });
-  const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: { distance: 5 },
-  });
-  const sensors = useSensors(touchSensor, mouseSensor);
+  const sensors = useSensors(pointerSensor, touchSensor);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
