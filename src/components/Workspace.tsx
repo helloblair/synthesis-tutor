@@ -120,7 +120,7 @@ export function Workspace() {
         )}
         {selectedId && (
           <p className="text-xs text-blue-500 font-semibold p-4 pb-0">
-            Tap another same-denominator block to combine · Double-tap to split
+            Tap another block with the same bottom number to join them! · Tap twice to break apart!
           </p>
         )}
         <div className="flex-1" />
@@ -136,7 +136,7 @@ export function Workspace() {
               {showSplitMenu === block.id && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute -top-16 left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-2 p-3 z-50"
+                  className="absolute bottom-full left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-2 p-3 z-50"
                 >
                   {[2, 3, 4].map((parts) => (
                     <button
