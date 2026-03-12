@@ -105,59 +105,63 @@ export function Workspace() {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      onClick={() => { setSelectedId(null); setShowSplitMenu(null); }}
-      className={`flex-1 rounded-xl border-2 border-dashed relative min-h-[300px] transition-colors flex flex-col ${
-        isOver ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-blue-500'
-      }`}
-    >
-      {state.workspaceBlocks.length === 0 && (
-        <p className="absolute inset-0 flex items-center justify-center text-gray-400 text-lg">
-          Drag blocks here!
-        </p>
-      )}
-      {selectedId && (
-        <p className="text-xs text-blue-500 font-semibold p-4 pb-0">
-          Tap another same-denominator block to combine · Double-tap to split
-        </p>
-      )}
-      <div className="flex-1" />
-      <div className="flex flex-row flex-wrap gap-1 p-4 items-end">
-        {state.workspaceBlocks.map((block) => (
-          <div key={block.id} className="relative flex items-end">
-            <DraggableWorkspaceBlock
-              block={block}
-              isSelected={block.id === selectedId}
-              onTap={() => handleTap(block.id)}
-              onDoubleTap={() => handleDoubleTap(block.id)}
-            />
-            {showSplitMenu === block.id && (
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="absolute -top-16 left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-2 p-3 z-50"
-              >
-                {[2, 3, 4].map((parts) => (
-                  <button
-                    key={parts}
-                    onClick={() => handleSplit(block.id, parts)}
-                    className="px-4 py-2 text-sm font-bold bg-gray-100 rounded-lg hover:bg-blue-100 active:bg-blue-200 touch-manipulation"
-                  >
-                    ÷{parts}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+    <div className="flex-1 flex flex-col gap-0 min-h-[300px]">
+      <div
+        ref={setNodeRef}
+        onClick={() => { setSelectedId(null); setShowSplitMenu(null); }}
+        className={`flex-1 rounded-xl border-2 border-dashed relative transition-colors flex flex-col ${
+          isOver ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-blue-500'
+        }`}
+      >
+        {state.workspaceBlocks.length === 0 && (
+          <p className="absolute inset-0 flex items-center justify-center text-gray-400 text-lg">
+            Drag blocks here!
+          </p>
+        )}
+        {selectedId && (
+          <p className="text-xs text-blue-500 font-semibold p-4 pb-0">
+            Tap another same-denominator block to combine · Double-tap to split
+          </p>
+        )}
+        <div className="flex-1" />
+        <div className="flex flex-row flex-wrap gap-1 p-4 items-end">
+          {state.workspaceBlocks.map((block) => (
+            <div key={block.id} className="relative flex items-end">
+              <DraggableWorkspaceBlock
+                block={block}
+                isSelected={block.id === selectedId}
+                onTap={() => handleTap(block.id)}
+                onDoubleTap={() => handleDoubleTap(block.id)}
+              />
+              {showSplitMenu === block.id && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute -top-16 left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-2 p-3 z-50"
+                >
+                  {[2, 3, 4].map((parts) => (
+                    <button
+                      key={parts}
+                      onClick={() => handleSplit(block.id, parts)}
+                      className="px-4 py-2 text-sm font-bold bg-gray-100 rounded-lg hover:bg-blue-100 active:bg-blue-200 touch-manipulation"
+                    >
+                      ÷{parts}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
       {state.workspaceBlocks.length > 0 && (
-        <button
-          onClick={(e) => { e.stopPropagation(); clearWorkspace(); setSelectedId(null); setShowSplitMenu(null); }}
-          className="absolute top-4 right-4 px-4 py-2 bg-gray-400 text-white text-sm rounded-lg active:scale-95 transition-transform touch-manipulation z-10"
-        >
-          Clear All
-        </button>
+        <div className="flex justify-end pt-3 shrink-0">
+          <button
+            onClick={() => { clearWorkspace(); setSelectedId(null); setShowSplitMenu(null); }}
+            className="px-4 py-2 bg-gray-400 text-white text-sm font-semibold rounded-lg active:scale-95 transition-transform touch-manipulation"
+          >
+            Clear All
+          </button>
+        </div>
       )}
     </div>
   );
