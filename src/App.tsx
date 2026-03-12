@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 import { ConversationProvider, useConversation } from './context/ConversationContext';
+import { ManipulativeProvider } from './context/ManipulativeContext';
 import { MessageList } from './components/MessageList';
 import { ResponseButtons } from './components/ResponseButtons';
+import { FractionPalette } from './components/FractionPalette';
+import { Workspace } from './components/Workspace';
 import { lessonScript } from './data/lessonScript';
 import './App.css';
+
+const BASE_WIDTH = 280;
 
 function TutorPanel() {
   const { state, startLesson, selectOption } = useConversation();
@@ -28,9 +33,9 @@ function TutorPanel() {
 
 function ManipulativePanel() {
   return (
-    <div className="w-[65%] h-full bg-gray-50 p-4">
-      <h2 className="text-xl font-bold text-gray-700">Workspace</h2>
-      <p className="text-gray-400 mt-4">Fraction blocks coming soon...</p>
+    <div className="w-[65%] h-full bg-gray-50 p-4 flex flex-col gap-4">
+      <FractionPalette baseWidth={BASE_WIDTH} />
+      <Workspace baseWidth={BASE_WIDTH} />
     </div>
   );
 }
@@ -38,10 +43,12 @@ function ManipulativePanel() {
 function App() {
   return (
     <ConversationProvider>
-      <div className="flex h-screen w-screen overflow-hidden">
-        <TutorPanel />
-        <ManipulativePanel />
-      </div>
+      <ManipulativeProvider>
+        <div className="flex h-screen w-screen overflow-hidden">
+          <TutorPanel />
+          <ManipulativePanel />
+        </div>
+      </ManipulativeProvider>
     </ConversationProvider>
   );
 }
