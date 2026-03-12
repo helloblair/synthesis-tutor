@@ -1,7 +1,6 @@
 import { createContext, useContext, useReducer, type ReactNode } from 'react';
 import type { Fraction } from '../utils/fractionMath';
 
-// --- Block Types ---
 export interface FractionBlock {
   id: string;
   fraction: Fraction;
@@ -10,15 +9,15 @@ export interface FractionBlock {
 }
 
 export const FRACTION_COLORS: Record<number, string> = {
-  1: '#374151',   // whole - dark gray
-  2: '#EF4444',   // halves - red
-  3: '#F97316',   // thirds - orange
-  4: '#EAB308',   // fourths - yellow
-  5: '#22C55E',   // fifths - green
-  6: '#15803D',   // sixths - dark green
-  8: '#3B82F6',   // eighths - blue
-  10: '#8B5CF6',  // tenths - purple
-  12: '#EC4899',  // twelfths - pink
+  1: '#374151',
+  2: '#EF4444',
+  3: '#F97316',
+  4: '#EAB308',
+  5: '#22C55E',
+  6: '#15803D',
+  8: '#3B82F6',
+  10: '#8B5CF6',
+  12: '#EC4899',
 };
 
 export const PALETTE_FRACTIONS: Fraction[] = [
@@ -33,7 +32,6 @@ export const PALETTE_FRACTIONS: Fraction[] = [
   { numerator: 1, denominator: 12 },
 ];
 
-// --- State ---
 interface ManipulativeState {
   workspaceBlocks: FractionBlock[];
   nextBlockId: number;
@@ -44,11 +42,11 @@ const initialState: ManipulativeState = {
   nextBlockId: 1,
 };
 
-// --- Actions ---
 type ManipulativeAction =
   | { type: 'ADD_BLOCK'; fraction: Fraction; position: { x: number; y: number } }
   | { type: 'MOVE_BLOCK'; id: string; position: { x: number; y: number } }
   | { type: 'REMOVE_BLOCK'; id: string }
+  | { type: 'SPLIT_BLOCK'; id: string; intoParts: number }
   | { type: 'CLEAR_WORKSPACE' };
 
 function manipulativeReducer(state: ManipulativeState, action: ManipulativeAction): ManipulativeState {
@@ -79,6 +77,33 @@ function manipulativeReducer(state: ManipulativeState, action: ManipulativeActio
         ...state,
         workspaceBlocks: state.workspaceBlocks.filter((b) => b.id !== action.id),
       };
+    case 'SPLIT_BLOCK': {
+      const block = state.workspaceBlocks.find((b) => b.id === action.id);
+      if (!block) return state;
+
+      const newDenominator = block.fraction.denominator * action.intoParts;
+      const newNumerator = block.fraction.numerator;
+      const color = FRACTION_COLORS[newDenominator] || '#6B7280';
+
+      const newBlocks: FractionBlock[] = [];
+      for (let i = 0; i < action.intoParts; i++) {
+        newBlocks.push({
+          id: `block-${state.nextBlockId + i}`,
+          fraction: { numerator: newNumerator, denominator: newDenominator },
+          color,
+          position: { x: 0, y: 0 },
+        });
+      }
+
+      return {
+        ...state,
+        workspaceBlocks: [
+          ...state.workspaceBlocks.filter((b) => b.id !== action.id),
+          ...newBlocks,
+        ],
+        nextBlockId: state.nextBlockId + action.intoParts,
+      };
+    }
     case 'CLEAR_WORKSPACE':
       return { ...state, workspaceBlocks: [], nextBlockId: 1 };
     default:
@@ -86,12 +111,12 @@ function manipulativeReducer(state: ManipulativeState, action: ManipulativeActio
   }
 }
 
-// --- Context ---
 interface ManipulativeContextType {
   state: ManipulativeState;
   addBlock: (fraction: Fraction, position: { x: number; y: number }) => void;
   moveBlock: (id: string, position: { x: number; y: number }) => void;
   removeBlock: (id: string) => void;
+  splitBlock: (id: string, intoParts: number) => void;
   clearWorkspace: () => void;
 }
 
@@ -109,11 +134,14 @@ export function ManipulativeProvider({ children }: { children: ReactNode }) {
   const removeBlock = (id: string) =>
     dispatch({ type: 'REMOVE_BLOCK', id });
 
+  const splitBlock = (id: string, intoParts: number) =>
+    dispatch({ type: 'SPLIT_BLOCK', id, intoParts });
+
   const clearWorkspace = () =>
     dispatch({ type: 'CLEAR_WORKSPACE' });
 
   return (
-    <ManipulativeContext.Provider value={{ state, addBlock, moveBlock, removeBlock, clearWorkspace }}>
+    <ManipulativeContext.Provider value={{ state, addBlock, moveBlock, removeBlock, splitBlock, clearWorkspace }}>
       {children}
     </ManipulativeContext.Provider>
   );
