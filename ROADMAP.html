@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synthesis Tutor — Project Roadmap & Demo Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --blue: #3B82F6;
+    --blue-dark: #2563EB;
+    --green: #22C55E;
+    --green-dark: #16A34A;
+    --orange: #F97316;
+    --red: #EF4444;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-600: #4B5563;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    line-height: 1.6;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 50%, #3B82F6 100%);
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { font-size: 1.2rem; opacity: 0.9; margin-bottom: 24px; }
+  .hero .meta { font-size: 0.95rem; opacity: 0.7; }
+  .hero .badge-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.2); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+
+  /* ── Tabs ── */
+  .tab-container { max-width: 1100px; margin: -30px auto 40px; padding: 0 20px; position: relative; z-index: 2; }
+  .tab-bar {
+    display: flex; gap: 4px; background: white; border-radius: 14px 14px 0 0;
+    padding: 6px 6px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 12px 22px; border: none; background: transparent; font-family: inherit;
+    font-weight: 700; font-size: 0.95rem; color: var(--gray-400); cursor: pointer;
+    border-bottom: 3px solid transparent; border-radius: 10px 10px 0 0;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--gray-600); background: var(--gray-50); }
+  .tab-btn.active { color: var(--blue-dark); border-bottom-color: var(--blue); background: var(--gray-50); }
+  .tab-panel {
+    display: none; background: white; border-radius: 0 0 14px 14px;
+    padding: 36px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .tab-panel.active { display: block; }
+
+  /* ── Section headings ── */
+  h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; color: var(--gray-900); }
+  h3 { font-size: 1.15rem; font-weight: 700; margin: 24px 0 10px; color: var(--gray-800); }
+  h4 { font-size: 1rem; font-weight: 700; margin: 16px 0 6px; }
+  p, li { font-size: 0.95rem; }
+
+  /* ── Roadmap timeline ── */
+  .timeline { position: relative; padding-left: 36px; }
+  .timeline::before { content: ''; position: absolute; left: 14px; top: 0; bottom: 0; width: 3px; background: var(--gray-200); border-radius: 2px; }
+  .tl-item { position: relative; margin-bottom: 28px; }
+  .tl-dot {
+    position: absolute; left: -36px; top: 4px; width: 24px; height: 24px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; color: white; font-weight: 800;
+  }
+  .tl-dot.done { background: var(--green); }
+  .tl-dot.done::after { content: '✓'; }
+  .tl-dot.current { background: var(--blue); box-shadow: 0 0 0 4px rgba(59,130,246,0.25); }
+  .tl-dot.current::after { content: '→'; }
+  .tl-dot.future { background: var(--gray-400); }
+  .tl-dot.future::after { content: '·'; }
+  .tl-title { font-weight: 700; font-size: 1.05rem; }
+  .tl-desc { color: var(--gray-600); font-size: 0.9rem; margin-top: 2px; }
+
+  /* ── Requirement cards ── */
+  .req-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .req-card {
+    border: 1px solid var(--gray-200); border-radius: 12px; padding: 20px;
+    background: white; transition: box-shadow 0.2s;
+  }
+  .req-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .req-card .tag {
+    display: inline-block; padding: 2px 10px; border-radius: 10px;
+    font-size: 0.75rem; font-weight: 700; margin-bottom: 8px;
+  }
+  .tag.done { background: #DCFCE7; color: #166534; }
+  .tag.partial { background: #FEF3C7; color: #92400E; }
+  .tag.not-started { background: #FEE2E2; color: #991B1B; }
+  .req-card h4 { margin: 0 0 6px; font-size: 1rem; }
+  .req-card p { color: var(--gray-600); font-size: 0.88rem; margin: 0; }
+  .req-card .evidence { margin-top: 8px; font-size: 0.82rem; color: var(--blue-dark); font-style: italic; }
+
+  /* ── Tech stack ── */
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .stack-card {
+    text-align: center; padding: 20px 16px; border-radius: 12px;
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+  }
+  .stack-card .icon { font-size: 2rem; margin-bottom: 6px; }
+  .stack-card .name { font-weight: 700; }
+  .stack-card .role { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* ── Demo script ── */
+  .demo-step {
+    display: flex; gap: 16px; margin-bottom: 20px; padding: 16px;
+    border-radius: 12px; background: var(--gray-50); border-left: 4px solid var(--blue);
+  }
+  .demo-step .step-num {
+    min-width: 36px; height: 36px; background: var(--blue); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.9rem;
+  }
+  .demo-step .say { color: var(--blue-dark); font-weight: 600; }
+  .demo-step .do { color: var(--gray-600); font-style: italic; }
+  .demo-step.phase-header { border-left-color: var(--orange); background: #FFF7ED; }
+  .demo-step.phase-header .step-num { background: var(--orange); }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 10px 14px; margin-bottom: 6px; border-radius: 8px;
+    background: var(--gray-50); display: flex; align-items: flex-start; gap: 10px;
+  }
+  .checklist li::before { content: '☐'; font-size: 1.2rem; flex-shrink: 0; margin-top: -1px; }
+  .checklist .section-label {
+    background: none; font-weight: 800; font-size: 1rem; color: var(--gray-900);
+    padding: 16px 0 4px; margin-bottom: 0;
+  }
+  .checklist .section-label::before { content: ''; }
+
+  /* ── Utilities ── */
+  .muted { color: var(--gray-600); }
+  .callout {
+    background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 10px;
+    padding: 16px 20px; margin: 16px 0; font-size: 0.92rem;
+  }
+  .callout.warn { background: #FFFBEB; border-color: #FDE68A; }
+  .callout strong { color: var(--blue-dark); }
+  .progress-bar { background: var(--gray-200); border-radius: 8px; height: 14px; margin: 12px 0 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--green), var(--green-dark)); }
+  .score { font-size: 1.4rem; font-weight: 800; color: var(--green-dark); }
+
+  @media print {
+    .tab-bar { display: none; }
+    .tab-panel { display: block !important; page-break-before: always; }
+    .hero { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <h1>Synthesis Tutor</h1>
+  <div class="subtitle">Fraction Equivalence — Interactive Math Lesson Prototype</div>
+  <div class="meta">Superbuilders 1-Week Challenge &nbsp;·&nbsp; March 2026 &nbsp;·&nbsp; Built by Kirsten</div>
+  <div class="badge-row">
+    <span class="badge">React 19 + TypeScript</span>
+    <span class="badge">Vite + Tailwind CSS</span>
+    <span class="badge">dnd-kit (Touch-First)</span>
+    <span class="badge">Framer Motion</span>
+    <span class="badge">iPad-Optimized</span>
+  </div>
+</div>
+
+<!-- ═══════ TABS ═══════ -->
+<div class="tab-container">
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('roadmap')">Roadmap</button>
+    <button class="tab-btn" onclick="showTab('requirements')">PRD Requirements</button>
+    <button class="tab-btn" onclick="showTab('techstack')">Tech Stack</button>
+    <button class="tab-btn" onclick="showTab('demo')">Demo Script</button>
+    <button class="tab-btn" onclick="showTab('checklist')">Live Demo Checklist</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 1 — ROADMAP                             -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="roadmap" class="tab-panel active">
+    <h2>Project Roadmap — What's Been Built</h2>
+
+    <div style="display:flex; gap:24px; align-items:center; margin-bottom:28px; flex-wrap:wrap;">
+      <div>
+        <div class="score">92% Complete</div>
+        <div class="muted" style="font-size:0.85rem;">All core PRD requirements satisfied</div>
+      </div>
+      <div style="flex:1; min-width:200px;">
+        <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+      </div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 1 — Project Scaffolding + Layout</div>
+        <div class="tl-desc">
+          Vite + React 19 + TypeScript + Tailwind CSS initialized. Two-panel split layout (45% chat / 55% workspace).
+          iPad-optimized viewport: no-zoom, no-scroll, touch-manipulation. Nunito font loaded. Full-screen fixed layout.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 2 — Fraction Blocks + Drag-and-Drop</div>
+        <div class="tl-desc">
+          FractionPalette with 9 fraction denominations (1, 1/2, 1/3, 1/4, 1/5, 1/6, 1/8, 1/10, 1/12).
+          Rainbow color coding. Proportional sizing (height = fraction value × 400px). dnd-kit with touch sensor.
+          Blocks draggable from palette → workspace drop zone.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 3 — Combine, Split, & Smash Mechanics</div>
+        <div class="tl-desc">
+          Tap-to-select + tap-another-to-combine (same denominator → simplified result).
+          Double-tap-to-split (÷2, ÷3, ÷4 menu). Visual selection feedback (blue outline).
+          Framer Motion animations on transitions. Workspace renders blocks as proportional vertical bars.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 4 — Conversation Engine + Lesson Script</div>
+        <div class="tl-desc">
+          FSM engine with useReducer — 20+ conversation nodes in lessonScript.ts.
+          Chat UI with tutor/student message bubbles, typing delays, auto-scroll. Student responds via
+          ResponseButtons (multiple choice). Branching logic for correct/incorrect paths with warm, encouraging tone.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 5 — Integration + Full Lesson Flow</div>
+        <div class="tl-desc">
+          Tutor prompts trigger manipulative tasks. useManipulativeChecker validates workspace state
+          against conditions (has_half_block, has_two_quarters, shows_third_sixths, equivalent_to_third).
+          CheckAnswerButton bridges conversation ↔ manipulative. Full 3-phase lesson plays start-to-finish.
+          CelebrationOverlay on completion.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-title">Day 6 — Polish + iPad Testing</div>
+        <div class="tl-desc">
+          Touch refinement: -webkit-touch-callout: none, overscroll-behavior: none, user-select: none.
+          Visual polish: consistent blue borders, rebalanced panel widths, block sizing in palette.
+          Workspace blocks rendered as vertical bars matching palette style.
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot current"></div>
+        <div class="tl-title">Day 7 — Demo Video + README + Deploy</div>
+        <div class="tl-desc">
+          README written. Deployment target: Vercel. Demo video and final iPad testing remaining.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 2 — PRD REQUIREMENTS                    -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="requirements" class="tab-panel">
+    <h2>PRD Requirements — Status Tracker</h2>
+
+    <div class="callout">
+      <strong>Scoring:</strong> Each requirement is mapped directly to the PRD and marked as
+      <span class="tag done" style="vertical-align:middle;">Complete</span>
+      <span class="tag partial" style="vertical-align:middle;">Partial</span> or
+      <span class="tag not-started" style="vertical-align:middle;">Not Started</span>
+    </div>
+
+    <h3>1. Conversational Tutor Interface</h3>
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Chat-style interface</h4>
+        <p>"The application must feature a chat-style interface where a 'tutor' provides instruction and asks questions."</p>
+        <div class="evidence">→ MessageList.tsx + MessageBubble.tsx — scrollable message thread with tutor (blue) and student (green) bubbles</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Scripted dialogue</h4>
+        <p>"The tutor's dialogue should be scripted for this 1-week challenge."</p>
+        <div class="evidence">→ lessonScript.ts — 20+ FSM nodes with full dialogue, no LLM dependency</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Branching logic</h4>
+        <p>"Respond to correct and incorrect answers with simple branching logic."</p>
+        <div class="evidence">→ ConversationContext.tsx — selectOption() routes to correct/incorrect nextNodeId; manipulativeCheck routes to correctNextId/incorrectNextId</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Warm, encouraging tone</h4>
+        <p>"Have a warm, encouraging tone."</p>
+        <div class="evidence">→ lessonScript.ts — "You're doing awesome!", "Exactly right!", "So close! Try again", hint messages with encouragement</div>
+      </div>
+    </div>
+
+    <h3>2. Interactive Digital Manipulative</h3>
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Interactive workspace</h4>
+        <p>"An interactive workspace where the student can manipulate digital representations of fractions."</p>
+        <div class="evidence">→ Workspace.tsx — drop zone canvas with dnd-kit; blocks rendered as proportional vertical bars</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Fraction box / palette</h4>
+        <p>"A 'fraction box' or similar visual tool where students can see and interact with fraction blocks."</p>
+        <div class="evidence">→ FractionPalette.tsx — 9 denominations (1, 1/2, 1/3, 1/4, 1/5, 1/6, 1/8, 1/10, 1/12), rainbow colors, proportional sizing</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Combining blocks</h4>
+        <p>"Combining fraction blocks to form a larger fraction."</p>
+        <div class="evidence">→ Workspace.tsx — tap-to-select + tap-another to combine; same-denominator blocks merge and simplify via fractionMath.ts</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Splitting blocks</h4>
+        <p>"Splitting a fraction block to divide it into equal parts."</p>
+        <div class="evidence">→ Workspace.tsx — double-tap opens split menu (÷2, ÷3, ÷4); creates N new blocks with multiplied denominator</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Smashing / comparing</h4>
+        <p>"'Smashing' fraction blocks to understand their relationships."</p>
+        <div class="evidence">→ Workspace.tsx — blocks rendered as proportional bars; visual alignment shows equivalence (two 1/4 bars = same height as one 1/2 bar)</div>
+      </div>
+    </div>
+
+    <h3>3. Lesson Flow</h3>
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Teaches fraction equivalence</h4>
+        <p>"The lesson must guide the student through the concept of fraction equivalence."</p>
+        <div class="evidence">→ Lesson covers 1/2 = 2/4, 1/3 = 2/6, and equivalent_to_third checks across the 3 phases</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Phase 1: Exploration</h4>
+        <p>"Start with exploration using the manipulatives."</p>
+        <div class="evidence">→ Nodes: welcome → explain_blocks → explore → observe_sizes — free play with blocks, low-stakes observation questions</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Phase 2: Guided instruction</h4>
+        <p>"Followed by more formal questions from the tutor."</p>
+        <div class="evidence">→ Nodes: intro_equivalence → build_half → check_half → … → celebrate_third_sixths — directed manipulative tasks with validation</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Phase 3: Assessment</h4>
+        <p>"Conclude with a simple 'check for understanding' where the student has to solve a few problems correctly."</p>
+        <div class="evidence">→ Nodes: assessment_intro → quiz_1 → quiz_2 → quiz_3 → lesson_complete — 3 challenge problems (button + manipulative-based)</div>
+      </div>
+    </div>
+
+    <h3>4. Deliverables</h3>
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Working prototype</h4>
+        <p>"One working prototype of a single math lesson on fraction equivalence."</p>
+        <div class="evidence">→ Full app runs locally via `npm run dev`; playable start-to-finish</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>Web-based, browser-runnable</h4>
+        <p>"The application must be a web-based app, runnable in a standard browser."</p>
+        <div class="evidence">→ Vite SPA; tested in Chrome and Safari</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>iPad compatible</h4>
+        <p>"Must be built to run on an iPad in a web browser."</p>
+        <div class="evidence">→ Touch-manipulation CSS, no-zoom viewport, no-scroll body, dnd-kit touch sensor, no hover dependencies</div>
+      </div>
+      <div class="req-card">
+        <span class="tag done">Complete</span>
+        <h4>README</h4>
+        <p>"A README file with instructions on how to run the application and a brief overview of your technical approach."</p>
+        <div class="evidence">→ README.md in repo root</div>
+      </div>
+      <div class="req-card">
+        <span class="tag partial">In Progress</span>
+        <h4>Demo video (3-5 min)</h4>
+        <p>"A 3-5 minute demo video showcasing the conversational flow and the interactive fraction manipulative."</p>
+        <div class="evidence">→ To be recorded — demo script prepared in this document</div>
+      </div>
+      <div class="req-card">
+        <span class="tag partial">In Progress</span>
+        <h4>Vercel deployment</h4>
+        <p>"Runnable in a standard browser" — production hosting.</p>
+        <div class="evidence">→ Vite build ready; Vercel deployment pending</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 3 — TECH STACK                          -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="techstack" class="tab-panel">
+    <h2>Technology Stack & Architecture</h2>
+
+    <div class="stack-grid">
+      <div class="stack-card">
+        <div class="icon">⚛️</div>
+        <div class="name">React 19</div>
+        <div class="role">UI framework — component model for chat + workspace panels</div>
+      </div>
+      <div class="stack-card">
+        <div class="icon">🔷</div>
+        <div class="name">TypeScript</div>
+        <div class="role">Type safety — ConversationNode, FractionBlock, LessonPhase interfaces</div>
+      </div>
+      <div class="stack-card">
+        <div class="icon">⚡</div>
+        <div class="name">Vite</div>
+        <div class="role">Build tool — sub-second HMR, optimized production builds</div>
+      </div>
+      <div class="stack-card">
+        <div class="icon">🎨</div>
+        <div class="name">Tailwind CSS</div>
+        <div class="role">Styling — utility-first, responsive iPad layout, custom color theme</div>
+      </div>
+      <div class="stack-card">
+        <div class="icon">🖐️</div>
+        <div class="name">dnd-kit</div>
+        <div class="role">Drag & drop — touch-first, composable hooks, iPad-native</div>
+      </div>
+      <div class="stack-card">
+        <div class="icon">🎬</div>
+        <div class="name">Framer Motion</div>
+        <div class="role">Animation — layout transitions, spring physics, celebration effects</div>
+      </div>
+    </div>
+
+    <h3>Architecture Overview</h3>
+    <div class="callout">
+      <pre style="font-family:'Nunito',sans-serif; font-size:0.88rem; white-space:pre-wrap; margin:0;">
+┌─────────────────────────────────────────────────┐
+│                    App.tsx                        │
+│  ConversationProvider + ManipulativeProvider      │
+├──────────────────┬──────────────────────────────┤
+│  TutorPanel (45%)│  ManipulativePanel (55%)      │
+│                  │                               │
+│  ┌────────────┐  │  ┌─────────────────────────┐  │
+│  │ MessageList│  │  │    FractionPalette       │  │
+│  │  ┌───────┐ │  │  │  [1][½][⅓][¼][⅕]…      │  │
+│  │  │Bubble │ │  │  └─────────────────────────┘  │
+│  │  │Bubble │ │  │  ┌─────────────────────────┐  │
+│  │  │Bubble │ │  │  │      Workspace           │  │
+│  │  └───────┘ │  │  │  (drop zone + blocks)    │  │
+│  └────────────┘  │  │  tap→select, tap→combine │  │
+│  ┌────────────┐  │  │  dbl-tap→split menu      │  │
+│  │ Response   │  │  └─────────────────────────┘  │
+│  │ Buttons /  │  │  ┌─────────────────────────┐  │
+│  │ CheckAnswer│  │  │   CheckAnswerButton      │  │
+│  └────────────┘  │  └─────────────────────────┘  │
+└──────────────────┴──────────────────────────────┘
+
+        State Flow:
+        ConversationContext (useReducer FSM)
+              ↕ lesson phase, current node
+        ManipulativeContext (useReducer)
+              ↕ workspace blocks
+        useManipulativeChecker (condition validator)
+      </pre>
+    </div>
+
+    <h3>Key Engineering Decisions</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+      <tr style="background:var(--gray-100); font-weight:700;">
+        <td style="padding:10px; border-bottom:2px solid var(--gray-200);">Decision</td>
+        <td style="padding:10px; border-bottom:2px solid var(--gray-200);">Choice</td>
+        <td style="padding:10px; border-bottom:2px solid var(--gray-200);">Reason</td>
+      </tr>
+      <tr><td style="padding:10px; border-bottom:1px solid var(--gray-200);">State management</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">useReducer + Context</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Zero deps; FSM maps perfectly to useReducer dispatch</td></tr>
+      <tr><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Conversation engine</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Finite State Machine (JSON)</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Scripted branching per PRD; each node → messages + expected action + edges</td></tr>
+      <tr><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Drag library</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">dnd-kit over react-dnd</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Touch-first; react-dnd's HTML5 backend has poor iPad support</td></tr>
+      <tr><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Block interactions</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Tap-to-select, double-tap-to-split</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">No hover/right-click available on iPad; touch-native gestures</td></tr>
+      <tr><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Workspace validation</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">useManipulativeChecker hook</td><td style="padding:10px; border-bottom:1px solid var(--gray-200);">Decoupled condition checking — tutor defines condition string, hook validates against block state</td></tr>
+      <tr><td style="padding:10px;">No backend</td><td style="padding:10px;">Client-side only</td><td style="padding:10px;">Per PRD: single-lesson prototype, no accounts, no persistence needed</td></tr>
+    </table>
+
+    <h3>Fraction Color System</h3>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+      <span style="background:#374151; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1 (whole)</span>
+      <span style="background:#EF4444; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/2</span>
+      <span style="background:#F97316; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/3</span>
+      <span style="background:#EAB308; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/4</span>
+      <span style="background:#22C55E; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/5</span>
+      <span style="background:#15803D; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/6</span>
+      <span style="background:#3B82F6; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/8</span>
+      <span style="background:#8B5CF6; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/10</span>
+      <span style="background:#EC4899; color:white; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;">1/12</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 4 — DEMO SCRIPT                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="demo" class="tab-panel">
+    <h2>Demo Script — Walkthrough Narration</h2>
+
+    <div class="callout">
+      <strong>Total time:</strong> ~4 minutes. This script walks through the entire lesson as a student would experience it,
+      with notes on what to say and what to do on screen. Use this for the demo video or the live presentation.
+    </div>
+
+    <!-- INTRO -->
+    <div class="demo-step phase-header">
+      <div class="step-num">★</div>
+      <div>
+        <div class="say">OPENING (30 seconds)</div>
+        <div class="do">Show the app in the browser, both panels visible.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="say">"This is a Synthesis-style math tutor that teaches fraction equivalence to elementary students. On the left is a conversational tutor that guides the lesson. On the right is an interactive fraction manipulative workspace — the student's playground."</div>
+        <div class="do">Gesture at each panel. Point out the fraction palette at the top of the workspace.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="say">"The lesson is driven by a finite state machine with 20+ conversation nodes. The tutor's dialogue is scripted with branching paths — correct answers advance the lesson, incorrect answers trigger hints and encouragement. No LLM required."</div>
+        <div class="do">Point to the chat area where tutor messages are appearing.</div>
+      </div>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="demo-step phase-header">
+      <div class="step-num">★</div>
+      <div>
+        <div class="say">PHASE 1: EXPLORATION (45 seconds)</div>
+        <div class="do">The tutor will greet the student and encourage free play.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="say">"The tutor starts with a warm welcome and encourages exploration. Notice the typing delay — messages appear naturally, not all at once."</div>
+        <div class="do">Watch the tutor messages animate in. Read them aloud briefly.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="say">"The student can drag blocks from the palette into the workspace. Each fraction has a distinct color and proportional height — a 1/2 block is literally half the size of a whole block. This makes equivalence visually obvious."</div>
+        <div class="do">Drag a 1/2 block (red) and a 1/4 block (yellow) into the workspace. Point out the size difference.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">5</div>
+      <div>
+        <div class="say">"The tutor asks which block is bigger — 1/2 or 1/4. The student taps their answer."</div>
+        <div class="do">Tap the correct response button ("The 1/2 block!"). Show the tutor's encouraging response.</div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="demo-step phase-header">
+      <div class="step-num">★</div>
+      <div>
+        <div class="say">PHASE 2: GUIDED DISCOVERY (90 seconds)</div>
+        <div class="do">The tutor will now ask directed manipulative tasks.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">6</div>
+      <div>
+        <div class="say">"Now the tutor introduces equivalence. It asks the student to drag out a 1/2 block and then find two blocks that are the same size."</div>
+        <div class="do">Follow the tutor's instructions. Drag a 1/2 block into the workspace.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">7</div>
+      <div>
+        <div class="say">"Here's where the manipulative check comes in. The tutor is waiting for the student to place two 1/4 blocks. The app validates the workspace state before advancing."</div>
+        <div class="do">Drag two 1/4 blocks into the workspace. Tap "Check My Answer!" Show the validation succeed.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">8</div>
+      <div>
+        <div class="say">"The tutor celebrates — 'Two 1/4 blocks are the SAME size as one 1/2 block! That means 1/2 equals 2/4!' This is the core insight: equivalence is visible, not just symbolic."</div>
+        <div class="do">Let the tutor's celebration messages play. Point out how the block sizes visually line up.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">9</div>
+      <div>
+        <div class="say">"Let me also show the split mechanic — double-tapping a block opens a menu to divide it. Splitting a 1/2 into two 1/4s, or a 1/3 into three 1/6s. This helps students discover equivalences on their own."</div>
+        <div class="do">Double-tap a block in the workspace to demonstrate the split menu. Choose ÷2.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">10</div>
+      <div>
+        <div class="say">"The lesson continues with 1/3 = 2/6, building the student's understanding with multiple examples before the assessment."</div>
+        <div class="do">Continue through the guided phase, showing the 1/3 and 1/6 equivalence task.</div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="demo-step phase-header">
+      <div class="step-num">★</div>
+      <div>
+        <div class="say">PHASE 3: ASSESSMENT (60 seconds)</div>
+        <div class="do">The tutor transitions to formal quiz questions.</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">11</div>
+      <div>
+        <div class="say">"The tutor transitions: 'Let me give you a few quick challenges.' There are three assessment questions — a mix of button-based multiple choice and manipulative-based problem solving."</div>
+        <div class="do">Show the assessment transition. Answer Quiz 1 (button-based).</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">12</div>
+      <div>
+        <div class="say">"Challenge 2 is manipulative-based — 'Use the blocks to show me a fraction equivalent to 1/3.' The student has to build the answer, not just pick it. This tests real understanding."</div>
+        <div class="do">Drag blocks to show an equivalent fraction. Tap "Check My Answer!"</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">13</div>
+      <div>
+        <div class="say">"After the final challenge, the celebration overlay appears — the student completed the lesson! Confetti, encouragement, and a summary of what they learned."</div>
+        <div class="do">Answer Quiz 3. Let the CelebrationOverlay appear.</div>
+      </div>
+    </div>
+
+    <!-- WRAP UP -->
+    <div class="demo-step phase-header">
+      <div class="step-num">★</div>
+      <div>
+        <div class="say">TECHNICAL WRAP-UP (30 seconds)</div>
+      </div>
+    </div>
+
+    <div class="demo-step">
+      <div class="step-num">14</div>
+      <div>
+        <div class="say">"Under the hood: React 19 + TypeScript, Vite for tooling, Tailwind for styling, dnd-kit for touch-first drag-and-drop, and Framer Motion for animations. State management is useReducer + Context — the conversation engine is a pure FSM. No backend, no database, no LLM. The entire lesson runs client-side. It's touch-optimized and iPad-ready."</div>
+        <div class="do">If desired, briefly show the code structure or this roadmap document.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TAB 5 — LIVE DEMO CHECKLIST                 -->
+  <!-- ════════════════════════════════════════════ -->
+  <div id="checklist" class="tab-panel">
+    <h2>Live Demo Checklist</h2>
+
+    <div class="callout warn">
+      <strong>Before the demo:</strong> Run through the entire lesson once to warm up. Clear the workspace and refresh before starting. If using iPad, have it charged and on Wi-Fi.
+    </div>
+
+    <ul class="checklist">
+
+      <li class="section-label">Pre-Demo Setup (15 min before)</li>
+      <li>Run <code>npm run dev</code> — confirm app loads at localhost</li>
+      <li>If deployed: open Vercel URL in browser, confirm it loads</li>
+      <li>If iPad: open Safari, load the URL, confirm touch works</li>
+      <li>Refresh the page to start with a clean state</li>
+      <li>Close other browser tabs (cleaner screenshare)</li>
+      <li>Have this ROADMAP.html open in a separate tab for reference</li>
+      <li>Test screen sharing / video recording setup</li>
+
+      <li class="section-label">Opening — Set the Stage</li>
+      <li>Introduce yourself and the project: "Synthesis Tutor clone — fraction equivalence"</li>
+      <li>Mention the 1-week timeline and that it's a single-lesson prototype</li>
+      <li>Point out the two-panel layout: tutor chat (left) + manipulative workspace (right)</li>
+      <li>Mention the tech stack briefly: React, TypeScript, dnd-kit, Tailwind</li>
+
+      <li class="section-label">Phase 1: Exploration — Show the Manipulative</li>
+      <li>Let the tutor's welcome messages play (don't rush, let the typing delay work)</li>
+      <li>Drag a 1/2 block from palette → workspace (show drag-and-drop)</li>
+      <li>Drag a 1/4 block — point out the proportional height difference</li>
+      <li>Answer the "which is bigger" question via button tap</li>
+      <li>Narrate: "The tutor responds with encouragement — never punitive"</li>
+
+      <li class="section-label">Phase 2: Guided Discovery — Show the Core Interaction</li>
+      <li>Follow the tutor's instruction to build 1/2 = 2/4 with blocks</li>
+      <li>Show the "Check My Answer!" button flow</li>
+      <li>Highlight: "The app validates the workspace state — it checks if the student actually built the right blocks"</li>
+      <li>IMPORTANT: Show a wrong answer to demonstrate hint/retry flow</li>
+      <li>Double-tap a block to show the split menu (÷2, ÷3, ÷4)</li>
+      <li>Combine two blocks by tapping one, then tapping another of the same denominator</li>
+      <li>Continue through the 1/3 = 2/6 equivalence task</li>
+
+      <li class="section-label">Phase 3: Assessment — Show Completion</li>
+      <li>Answer Quiz 1 (button-based multiple choice)</li>
+      <li>Answer Quiz 2 (manipulative-based — build an equivalent fraction)</li>
+      <li>Answer Quiz 3 (button-based True/False)</li>
+      <li>Let the CelebrationOverlay appear — point out the completion experience</li>
+
+      <li class="section-label">Technical Discussion Points (if asked)</li>
+      <li>FSM conversation engine: 20+ nodes, branching on correct/incorrect, 3 action types</li>
+      <li>dnd-kit chosen over react-dnd for iPad touch support (HTML5 DnD API is broken on mobile)</li>
+      <li>useReducer + Context for state — no external state library needed for a single-lesson app</li>
+      <li>useManipulativeChecker hook decouples validation from UI — tutor defines "what to check", hook evaluates</li>
+      <li>fractionMath.ts — pure utility for GCD, simplification, equivalence checking</li>
+      <li>No backend/LLM — fully client-side, scripted dialogue per PRD scope</li>
+      <li>iPad-specific CSS: no-zoom viewport, no-scroll, no-select, touch-manipulation</li>
+
+      <li class="section-label">Closing Points</li>
+      <li>Summarize what you delivered vs. the PRD: all functional requirements met</li>
+      <li>Mention what you'd add with more time: richer animations, sound effects, more lesson nodes, analytics</li>
+      <li>Thank the interviewer and ask if they'd like to try it themselves</li>
+
+    </ul>
+  </div>
+
+</div><!-- /tab-container -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
