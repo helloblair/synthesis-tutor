@@ -1,10 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useManipulative } from '../context/ManipulativeContext';
 import { useDroppable } from '@dnd-kit/core';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { fractionLabel, simplify } from '../utils/fractionMath';
 import type { FractionBlock } from '../context/ManipulativeContext';
+
+const MAX_BLOCKS = 8;
 
 function DraggableWorkspaceBlock({
   block,
@@ -59,12 +61,23 @@ function DraggableWorkspaceBlock({
   );
 }
 
-export function Workspace() {
+export function Workspace({ triggerWarning }: { triggerWarning: number }) {
   const { state, removeBlock, clearWorkspace, addBlock, splitBlock } = useManipulative();
   const { setNodeRef, isOver } = useDroppable({ id: 'workspace' });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSplitMenu, setShowSplitMenu] = useState<string | null>(null);
+  const [showWarning, setShowWarning] = useState(false);
 
+  const isFull = state.workspaceBlocks.length >= MAX_BLOCKS;
+
+  useEffect(() => {
+    if (showWarning) {
+      const timer = setTimeout(() => setShowWarning(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showWarning]);
+
+  
   const handleTap = (blockId: string) => {
     setShowSplitMenu(null);
 
@@ -110,7 +123,7 @@ export function Workspace() {
         ref={setNodeRef}
         onClick={() => { setSelectedId(null); setShowSplitMenu(null); }}
         className={`flex-1 rounded-xl border-2 border-dashed relative transition-colors flex flex-col ${
-          isOver ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-blue-500'
+          isOver ? (isFull ? 'bg-red-50 border-red-300' : 'bg-blue-50 border-blue-400') : 'bg-gray-50 border-blue-500'
         }`}
       >
         {state.workspaceBlocks.length === 0 && (
@@ -122,6 +135,13 @@ export function Workspace() {
           <p className="text-xs text-blue-500 font-semibold p-4 pb-0">
             Tap another block with the same bottom number to join them! · Tap twice to break apart!
           </p>
+        )}
+        {showWarning && (
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 z-40 mx-0">
+            <div className="bg-blue-500/85 text-white text-center py-4 px-6 font-bold text-base rounded-lg mx-2">
+              Whoa, it's getting crowded in here! 🐻 Clear some blocks to make room for more!
+            </div>
+          </div>
         )}
         <div className="flex-1" />
         <div className="flex flex-row flex-wrap gap-1 p-4 items-end">

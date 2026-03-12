@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors, type DragStartEvent, type DragEndEvent } from '@dnd-kit/core';
 import { ConversationProvider, useConversation } from './context/ConversationContext';
 import { ManipulativeProvider, useManipulative } from './context/ManipulativeContext';
@@ -14,6 +14,7 @@ import { fractionLabel } from './utils/fractionMath';
 import type { Fraction } from './utils/fractionMath';
 import './App.css';
 
+const MAX_BLOCKS = 8;
 
 function TutorPanel() {
   const { state, startLesson, selectOption } = useConversation();
@@ -53,6 +54,7 @@ function DragOverlayBlock({ fraction }: { fraction: Fraction }) {
 function ManipulativePanel() {
   const { addBlock, state } = useManipulative();
   const [activeFraction, setActiveFraction] = useState<Fraction | null>(null);
+  const [triggerWarning, setTriggerWarning] = useState(0);
 
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: { distance: 5 },
@@ -69,7 +71,7 @@ function ManipulativePanel() {
     }
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     setActiveFraction(null);
     const { active, over } = event;
     if (!over || over.id !== 'workspace') return;
@@ -78,18 +80,19 @@ function ManipulativePanel() {
     if (!data) return;
 
     if (data.source === 'palette') {
-      const blockCount = state.workspaceBlocks.length;
-      const x = 20 + (blockCount * 75) % 300;
-      const y = 20;
-      addBlock(data.fraction, { x, y });
+      if (state.workspaceBlocks.length >= MAX_BLOCKS) {
+        setTriggerWarning((n) => n + 1);
+        return;
+      }
+      addBlock(data.fraction, { x: 0, y: 0 });
     }
-  };
+  }, [addBlock, state.workspaceBlocks.length]);
 
   return (
     <div className="w-[55%] h-full p-4 flex flex-row gap-4" style={{ backgroundColor: '#FAFAF8' }}>
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <FractionPalette />
-        <Workspace />
+        <Workspace triggerWarning={triggerWarning} />
         <DragOverlay dropAnimation={null}>
           {activeFraction ? <DragOverlayBlock fraction={activeFraction} /> : null}
         </DragOverlay>
