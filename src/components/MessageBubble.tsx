@@ -6,8 +6,8 @@ export function MessageBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex ${isTutor ? 'justify-start' : 'justify-end'} mb-3`}>
       {isTutor && (
-        <div className="w-8 h-8 rounded-full bg-blue-400 flex items-center justify-center text-white text-sm font-bold mr-2 shrink-0 mt-1">
-          F
+        <div className="w-8 h-8 flex items-center justify-center text-2xl mr-2 shrink-0 mt-1">
+          🐻
         </div>
       )}
       <div
