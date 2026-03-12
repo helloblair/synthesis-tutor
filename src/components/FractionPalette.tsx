@@ -1,34 +1,52 @@
-import { PALETTE_FRACTIONS, FRACTION_COLORS, useManipulative } from '../context/ManipulativeContext';
+import { PALETTE_FRACTIONS, FRACTION_COLORS } from '../context/ManipulativeContext';
 import { fractionLabel } from '../utils/fractionMath';
 import type { Fraction } from '../utils/fractionMath';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
-export function FractionPalette({ baseWidth }: { baseWidth: number }) {
-  const { addBlock } = useManipulative();
+function DraggablePaletteBlock({ fraction, baseWidth }: { fraction: Fraction; baseWidth: number }) {
+  const width = (fraction.numerator / fraction.denominator) * baseWidth;
+  const color = FRACTION_COLORS[fraction.denominator] || '#6B7280';
+  const id = `palette-${fraction.numerator}-${fraction.denominator}`;
 
-  const handleTap = (fraction: Fraction) => {
-    const x = 20 + Math.random() * 60;
-    const y = 20 + Math.random() * 100;
-    addBlock(fraction, { x, y });
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id,
+    data: { fraction, source: 'palette' },
+  });
+
+  const style = {
+    width: `${Math.max(width, 40)}px`,
+    backgroundColor: color,
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : 1,
   };
 
   return (
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className="h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md touch-manipulation select-none"
+      style={style}
+    >
+      {fractionLabel(fraction)}
+    </div>
+  );
+}
+
+export function FractionPalette({ baseWidth }: { baseWidth: number }) {
+  return (
     <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
-      <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">Fraction Box — Tap to add</p>
+      <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">Fraction Box — Drag blocks down</p>
       <div className="flex flex-wrap gap-2">
-        {PALETTE_FRACTIONS.map((f) => {
-          const width = (f.numerator / f.denominator) * baseWidth;
-          const color = FRACTION_COLORS[f.denominator] || '#6B7280';
-          return (
-            <button
-              key={`${f.numerator}-${f.denominator}`}
-              onClick={() => handleTap(f)}
-              className="h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md active:scale-95 transition-transform touch-manipulation"
-              style={{ width: `${Math.max(width, 40)}px`, backgroundColor: color }}
-            >
-              {fractionLabel(f)}
-            </button>
-          );
-        })}
+        {PALETTE_FRACTIONS.map((f) => (
+          <DraggablePaletteBlock
+            key={`${f.numerator}-${f.denominator}`}
+            fraction={f}
+            baseWidth={baseWidth}
+          />
+        ))}
       </div>
     </div>
   );

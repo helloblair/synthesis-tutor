@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
+import { DndContext, TouchSensor, MouseSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { ConversationProvider, useConversation } from './context/ConversationContext';
-import { ManipulativeProvider } from './context/ManipulativeContext';
+import { ManipulativeProvider, useManipulative } from './context/ManipulativeContext';
 import { MessageList } from './components/MessageList';
 import { ResponseButtons } from './components/ResponseButtons';
 import { CheckAnswerButton } from './components/CheckAnswerButton';
@@ -35,10 +36,34 @@ function TutorPanel() {
 }
 
 function ManipulativePanel() {
+  const { addBlock } = useManipulative();
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { distance: 5 },
+  });
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: { distance: 5 },
+  });
+  const sensors = useSensors(touchSensor, mouseSensor);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || over.id !== 'workspace') return;
+
+    const data = active.data.current;
+    if (!data) return;
+
+    if (data.source === 'palette') {
+      addBlock(data.fraction, { x: 0, y: 0 });
+    }
+  };
+
   return (
     <div className="w-[65%] h-full bg-gray-50 p-4 flex flex-col gap-4">
-      <FractionPalette baseWidth={BASE_WIDTH} />
-      <Workspace baseWidth={BASE_WIDTH} />
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <FractionPalette baseWidth={BASE_WIDTH} />
+        <Workspace baseWidth={BASE_WIDTH} />
+      </DndContext>
     </div>
   );
 }
