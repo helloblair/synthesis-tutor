@@ -59,7 +59,7 @@ function DraggableWorkspaceBlock({
   );
 }
 
-export function Workspace({ baseWidth }: { baseWidth: number }) {
+export function Workspace() {
   const { state, removeBlock, clearWorkspace, addBlock, splitBlock } = useManipulative();
   const { setNodeRef, isOver } = useDroppable({ id: 'workspace' });
   const [selectedId, setSelectedId] = useState<string | null>(null);
