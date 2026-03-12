@@ -111,7 +111,7 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
       ref={setNodeRef}
       onClick={() => { setSelectedId(null); setShowSplitMenu(null); }}
       className={`flex-1 rounded-xl border-2 border-dashed relative overflow-hidden min-h-[300px] transition-colors ${
-        isOver ? 'bg-blue-50 border-blue-300' : 'bg-gray-100 border-gray-300'
+        isOver ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-blue-500'
       }`}
     >
       {state.workspaceBlocks.length === 0 && (

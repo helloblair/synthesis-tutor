@@ -17,14 +17,13 @@ function TutorPanel() {
   const { state, startLesson, selectOption } = useConversation();
   const currentNode = lessonScript[state.currentNodeId];
 
-  useEffect(() => {
-    startLesson();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { startLesson(); }, []);
 
   return (
-    <div className="w-[45%] min-w-[400px] h-full bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-100">
-        <h2 className="text-lg font-bold text-blue-500">Finn the Fraction Friend</h2>
+    <div className="w-[45%] min-w-[400px] h-full bg-white flex flex-col">
+      <div className="p-4 bg-blue-500">
+        <h2 className="text-lg font-bold text-white">Finn the Fraction Friend</h2>
       </div>
       <MessageList messages={state.messageHistory} />
       {state.showingOptions && currentNode?.options && (
@@ -59,7 +58,7 @@ function ManipulativePanel() {
   };
 
   return (
-    <div className="w-[55%] h-full bg-gray-50 p-4 flex flex-row gap-4 overflow-hidden">
+    <div className="w-[55%] h-full p-4 flex flex-row gap-4 overflow-hidden" style={{ backgroundColor: '#FAFAF8' }}>
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <FractionPalette />
         <Workspace baseWidth={BASE_WIDTH} />
