@@ -3,6 +3,7 @@ import { ConversationProvider, useConversation } from './context/ConversationCon
 import { ManipulativeProvider } from './context/ManipulativeContext';
 import { MessageList } from './components/MessageList';
 import { ResponseButtons } from './components/ResponseButtons';
+import { CheckAnswerButton } from './components/CheckAnswerButton';
 import { FractionPalette } from './components/FractionPalette';
 import { Workspace } from './components/Workspace';
 import { lessonScript } from './data/lessonScript';
@@ -27,6 +28,7 @@ function TutorPanel() {
       {state.showingOptions && currentNode?.options && (
         <ResponseButtons options={currentNode.options} onSelect={selectOption} />
       )}
+      <CheckAnswerButton />
     </div>
   );
 }
