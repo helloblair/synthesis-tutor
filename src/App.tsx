@@ -61,7 +61,7 @@ function ManipulativePanel() {
   return (
     <div className="flex-1 h-full bg-gray-50 p-4 flex flex-col gap-4 overflow-hidden">
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <FractionPalette baseWidth={BASE_WIDTH} />
+        <FractionPalette />
         <Workspace baseWidth={BASE_WIDTH} />
       </DndContext>
     </div>

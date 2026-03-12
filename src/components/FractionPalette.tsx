@@ -1,4 +1,4 @@
-import { PALETTE_FRACTIONS, FRACTION_COLORS, useManipulative } from '../context/ManipulativeContext';
+import { PALETTE_FRACTIONS, FRACTION_COLORS } from '../context/ManipulativeContext';
 import { fractionLabel } from '../utils/fractionMath';
 import type { Fraction } from '../utils/fractionMath';
 import { useDraggable } from '@dnd-kit/core';
@@ -37,7 +37,7 @@ function DraggablePaletteBlock({ fraction, baseWidth }: { fraction: Fraction; ba
   );
 }
 
-export function FractionPalette({ baseWidth }: { baseWidth: number }) {
+export function FractionPalette() {
   return (
     <div className="bg-white rounded-xl p-3 shadow-sm border border-gray-200">
       <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">Fraction Box — Drag blocks down</p>
