@@ -11,7 +11,7 @@ import { CelebrationOverlay } from './components/CelebrationOverlay';
 import { lessonScript } from './data/lessonScript';
 import './App.css';
 
-const BASE_WIDTH = 320;
+const BASE_WIDTH = 280;
 
 function TutorPanel() {
   const { state, startLesson, selectOption } = useConversation();
@@ -22,7 +22,7 @@ function TutorPanel() {
   }, []);
 
   return (
-    <div className="w-[340px] min-w-[340px] h-full bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-[45%] min-w-[400px] h-full bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-100">
         <h2 className="text-lg font-bold text-blue-500">Finn the Fraction Friend</h2>
       </div>
@@ -59,7 +59,7 @@ function ManipulativePanel() {
   };
 
   return (
-    <div className="flex-1 h-full bg-gray-50 p-4 flex flex-col gap-4 overflow-hidden">
+    <div className="w-[55%] h-full bg-gray-50 p-4 flex flex-row gap-4 overflow-hidden">
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <FractionPalette />
         <Workspace baseWidth={BASE_WIDTH} />
