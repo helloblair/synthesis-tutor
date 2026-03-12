@@ -120,11 +120,11 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
         </p>
       )}
       {selectedId && (
-        <p className="absolute top-2 left-3 text-xs text-blue-500 font-semibold">
+        <p className="absolute top-4 left-5 text-xs text-blue-500 font-semibold">
           Tap another same-denominator block to combine · Double-tap to split
         </p>
       )}
-      <div className="flex flex-wrap gap-2 p-4 pt-8 items-end">
+      <div className="flex flex-wrap gap-3 p-8 pt-16 items-end">
         {state.workspaceBlocks.map((block) => (
           <div key={block.id} className="relative">
             <DraggableWorkspaceBlock
@@ -137,13 +137,13 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
             {showSplitMenu === block.id && (
               <div
                 onClick={(e) => e.stopPropagation()}
-                className="absolute -top-12 left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-1 p-1 z-50"
+                className="absolute -top-16 left-0 bg-white rounded-lg shadow-lg border border-gray-200 flex gap-2 p-3 z-50"
               >
                 {[2, 3, 4].map((parts) => (
                   <button
                     key={parts}
                     onClick={() => handleSplit(block.id, parts)}
-                    className="px-3 py-1 text-sm font-bold bg-gray-100 rounded hover:bg-blue-100 active:bg-blue-200 touch-manipulation"
+                    className="px-4 py-2 text-sm font-bold bg-gray-100 rounded-lg hover:bg-blue-100 active:bg-blue-200 touch-manipulation"
                   >
                     ÷{parts}
                   </button>
@@ -156,7 +156,7 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
       {state.workspaceBlocks.length > 0 && (
         <button
           onClick={(e) => { e.stopPropagation(); clearWorkspace(); setSelectedId(null); setShowSplitMenu(null); }}
-          className="absolute bottom-3 right-3 px-3 py-2 bg-gray-400 text-white text-sm rounded-lg active:scale-95 transition-transform touch-manipulation"
+          className="absolute bottom-4 right-4 px-4 py-2 bg-gray-400 text-white text-sm rounded-lg active:scale-95 transition-transform touch-manipulation"
         >
           Clear All
         </button>
