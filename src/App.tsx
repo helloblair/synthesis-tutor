@@ -14,7 +14,6 @@ import { fractionLabel } from './utils/fractionMath';
 import type { Fraction } from './utils/fractionMath';
 import './App.css';
 
-const BASE_WIDTH = 280;
 
 function TutorPanel() {
   const { state, startLesson, selectOption } = useConversation();
