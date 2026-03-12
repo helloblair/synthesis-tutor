@@ -5,7 +5,6 @@ import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { fractionLabel, simplify } from '../utils/fractionMath';
 import type { FractionBlock } from '../context/ManipulativeContext';
-import { FRACTION_COLORS } from '../context/ManipulativeContext';
 
 function DraggableWorkspaceBlock({
   block,
