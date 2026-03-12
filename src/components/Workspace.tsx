@@ -13,7 +13,6 @@ function DraggableWorkspaceBlock({
   onDoubleTap,
 }: {
   block: FractionBlock;
-  baseWidth: number;
   isSelected: boolean;
   onTap: () => void;
   onDoubleTap: () => void;
@@ -40,8 +39,8 @@ function DraggableWorkspaceBlock({
     height: `${height}px`,
     backgroundColor: block.color,
     transform: CSS.Translate.toString(transform),
-    opacity: isDragging ? 0.7 : 1,
-    zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 999 : 1,
     outline: isSelected ? '3px solid #3B82F6' : 'none',
     outlineOffset: '2px',
   };
@@ -52,7 +51,7 @@ function DraggableWorkspaceBlock({
       {...listeners}
       {...attributes}
       onClick={handleClick}
-      className="w-16 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md touch-manipulation select-none cursor-grab active:cursor-grabbing"
+      className="w-16 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md touch-manipulation select-none cursor-grab active:cursor-grabbing self-end"
       style={style}
     >
       {fractionLabel(block.fraction)}
@@ -109,7 +108,7 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
     <div
       ref={setNodeRef}
       onClick={() => { setSelectedId(null); setShowSplitMenu(null); }}
-      className={`flex-1 rounded-xl border-2 border-dashed relative overflow-hidden min-h-[300px] transition-colors ${
+      className={`flex-1 rounded-xl border-2 border-dashed relative min-h-[300px] transition-colors flex flex-col ${
         isOver ? 'bg-blue-50 border-blue-400' : 'bg-gray-50 border-blue-500'
       }`}
     >
@@ -119,16 +118,16 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
         </p>
       )}
       {selectedId && (
-        <p className="absolute top-4 left-5 text-xs text-blue-500 font-semibold">
+        <p className="text-xs text-blue-500 font-semibold p-4 pb-0">
           Tap another same-denominator block to combine · Double-tap to split
         </p>
       )}
-      <div className="flex flex-row flex-wrap gap-3 p-6 pt-14 items-end">
+      <div className="flex-1" />
+      <div className="flex flex-row flex-wrap gap-1 p-4 items-end">
         {state.workspaceBlocks.map((block) => (
-          <div key={block.id} className="relative">
+          <div key={block.id} className="relative flex items-end">
             <DraggableWorkspaceBlock
               block={block}
-              baseWidth={baseWidth}
               isSelected={block.id === selectedId}
               onTap={() => handleTap(block.id)}
               onDoubleTap={() => handleDoubleTap(block.id)}
@@ -155,7 +154,7 @@ export function Workspace({ baseWidth }: { baseWidth: number }) {
       {state.workspaceBlocks.length > 0 && (
         <button
           onClick={(e) => { e.stopPropagation(); clearWorkspace(); setSelectedId(null); setShowSplitMenu(null); }}
-          className="absolute bottom-4 right-4 px-4 py-2 bg-gray-400 text-white text-sm rounded-lg active:scale-95 transition-transform touch-manipulation"
+          className="absolute top-4 right-4 px-4 py-2 bg-gray-400 text-white text-sm rounded-lg active:scale-95 transition-transform touch-manipulation z-10"
         >
           Clear All
         </button>
