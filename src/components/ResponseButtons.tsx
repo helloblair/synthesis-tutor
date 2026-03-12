@@ -7,7 +7,7 @@ interface Props {
 
 export function ResponseButtons({ options, onSelect }: Props) {
   return (
-    <div className="flex flex-wrap gap-2 justify-end mb-3 px-2">
+    <div className="flex flex-wrap gap-2 justify-end p-4 border-t border-gray-100 bg-white shrink-0">
       {options.map((option) => (
         <button
           key={option.label}
