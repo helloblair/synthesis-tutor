@@ -6,6 +6,7 @@ import { ResponseButtons } from './components/ResponseButtons';
 import { CheckAnswerButton } from './components/CheckAnswerButton';
 import { FractionPalette } from './components/FractionPalette';
 import { Workspace } from './components/Workspace';
+import { CelebrationOverlay } from './components/CelebrationOverlay';
 import { lessonScript } from './data/lessonScript';
 import './App.css';
 
@@ -49,6 +50,7 @@ function App() {
         <div className="flex h-screen w-screen overflow-hidden">
           <TutorPanel />
           <ManipulativePanel />
+          <CelebrationOverlay />
         </div>
       </ManipulativeProvider>
     </ConversationProvider>
