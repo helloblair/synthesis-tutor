@@ -66,16 +66,22 @@ export function Workspace({ triggerWarning }: { triggerWarning: number }) {
   const { setNodeRef, isOver } = useDroppable({ id: 'workspace' });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSplitMenu, setShowSplitMenu] = useState<string | null>(null);
-  const [showWarning, setShowWarning] = useState(false);
+  const [warningKey, setWarningKey] = useState(0);
 
   const isFull = state.workspaceBlocks.length >= MAX_BLOCKS;
+  const showWarning = warningKey > 0;
+
+  // Sync with parent trigger
+  if (triggerWarning > 0 && triggerWarning !== warningKey) {
+    setWarningKey(triggerWarning);
+  }
 
   useEffect(() => {
-    if (showWarning) {
-      const timer = setTimeout(() => setShowWarning(false), 3000);
+    if (warningKey > 0) {
+      const timer = setTimeout(() => setWarningKey(0), 3000);
       return () => clearTimeout(timer);
     }
-  }, [showWarning]);
+  }, [warningKey]);
 
   
   const handleTap = (blockId: string) => {
